@@ -1,4 +1,3 @@
-
 Maintenance scripts and documentation for a live USB image
 meant for use with [http://mooc.fi/](http://mooc.fi/).
 
@@ -22,7 +21,7 @@ See [here](http://qemu.weilnetz.de/qemu-doc.html#sec_005finvocation) for more op
 Mounts the image and
 
 - removes bash history
-- removes `.ssh/known_hosts'
+- removes `.ssh/known_hosts`
 - clears recently opened documents
 - clears Firefox cache, cookies, history and downloads (but not settings)
 - clears `/tmp` and `/var/tmp`
