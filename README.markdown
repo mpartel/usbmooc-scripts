@@ -63,7 +63,7 @@ The full release sequence is:
 
 Usage:
 
-  resize-onto.sh new-image
+    resize-onto.sh new-image
 
 Copies the data in `images/current.img` to `new-image` such that the main partition is grown or shrunk.
 `new-image` must exist with the desired size. `fallocate -l size new-image` is a good way to allocate it.
