@@ -6,7 +6,7 @@ The image files may be downloaded [here](http://new.testmycode.net/usbmooc/).
 
 ## Basic usage ##
 
-The image is based on Linux Mint 13 and lives in a raw disk file, including the partition table.
+The image is based on 32-bit Linux Mint 13 and lives in a raw disk file, including the partition table.
 The system is assumed to be installed on a single partition that is marked bootable.
 
 Edit the image under QEMU with a command like
@@ -28,7 +28,7 @@ Mounts the image and
 - clears apt's package cache
 - removes the TMC plugin's settings
 
-Must be run as root.
+Must be run as root since it needs to mount the image.
 Requires ruby, sqlite3 and parted.
 
 
@@ -59,6 +59,27 @@ The full release sequence is:
 - test the image in a VM
 - rsync.sh
 
-## TODO ##
+## resize-onto.sh ##
 
-A script to resize the image, with its partitions, to fit on a smaller or larger device.
+Usage:
+
+  resize-onto.sh new-image
+
+Copies the data in `images/current.img` to `new-image` such that the main partition is grown or shrunk.
+`new-image` must exist with the desired size. `fallocate -l size new-image` is a good way to allocate it.
+
+It also needs to reinstall grub. For that, `chrooter/` must be built (with `make`).
+If you're on a 64-bit system, your compiler must be able to generate i386 executables.
+You may need to install `gcc-multilib` on Debian-derivatives.
+
+You may also set `new-image` to a block device (your USB stick), but ensure your desktop environment
+doesn't automount it, since each change to its partition table seems to fire some sort of "disk changed" event.
+
+Caveat: currently, when shrinking the image, it shrinks the main partition's FS temporarily in the original image.
+This may be slightly dangerous.
+
+Requires ruby and parted.
+Must be run as root since it currently uses a loopback device to resize the FS.
+
+
+
