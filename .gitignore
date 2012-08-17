@@ -1,3 +1,4 @@
-images
-mnt
-settings.sh
+/images
+/mnt
+/settings.sh
+/chrooter/build

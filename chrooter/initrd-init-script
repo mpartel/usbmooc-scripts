@@ -1,0 +1,42 @@
+#!/bin/ash -e
+echo "Chrooter initrd starting"
+
+makedevs() {
+  DIR=$1
+  echo "Making basic devices in $DIR"
+  [ -e $DIR/null ] || mknod $DIR/null c 1 3
+  [ -e $DIR/ubda ] || mknod $DIR/ubda b 98 0
+  for i in `seq 1 15`; do
+    [ -e $DIR/ubda$i ] || mknod $DIR/ubda$i b 98 1
+  done
+}
+
+makedevs /dev
+
+echo "Mounting FS"
+mkdir -p /mnt
+mount -t ext4 /dev/ubda1 /mnt
+
+echo "Mounting proc"
+mount -t proc proc /mnt/proc
+
+echo "Mounting sysfs"
+mount -t sysfs sysfs /mnt/sys
+
+echo "Creating device nodes on tmpfs"
+chroot /mnt mount -t tmpfs tmpfs /dev
+makedevs /mnt/dev
+
+if grep -q REINSTALL_GRUB /mnt/proc/cmdline; then
+  #echo "Running update-grub"
+  #chroot /mnt /usr/sbin/update-grub
+  echo "Running grub-setup"
+  chroot /mnt /usr/sbin/grub-setup /dev/ubda
+else
+  chroot /mnt /bin/bash
+fi
+
+echo "Shutting down"
+sync
+chroot /mnt /sbin/halt -f
+
