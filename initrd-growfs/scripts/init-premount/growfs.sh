@@ -39,12 +39,16 @@ for x in $(cat /proc/cmdline); do
 done
 
 
-if [ ! -e "$ROOTDEV" ]; then
-    echo "Waiting for $ROOTDEV to appear..."
-    sleep 1
+for i in `seq 1 40`; do
     if [ ! -e "$ROOTDEV" ]; then
+        echo "Waiting for $ROOTDEV to appear..."
         sleep 1
     fi
+done
+
+if [ ! -e "$ROOTDEV" ]; then
+    echo "Error: root device $ROOTDEV did not appear"
+    exit 1
 fi
 
 DISK=`parent-dev "$ROOTDEV"`
