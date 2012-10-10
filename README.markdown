@@ -1,7 +1,7 @@
 Maintenance scripts and documentation for a live USB image
 meant for use with [http://mooc.fi/](http://mooc.fi/).
 
-The image files may be downloaded [here](http://new.testmycode.net/usbmooc/).
+The image files may be downloaded [here](http://testmycode.net/usbmooc/).
 
 
 ## Building the tools ##
