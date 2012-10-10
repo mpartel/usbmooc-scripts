@@ -13,6 +13,8 @@ for homedir in "$ROOT"/home/* "$ROOT"/root; do
     rm -f .ssh/known_hosts
     rm -f .bash_history
     rm -f .local/share/recently-used.xbel
+    rm -Rf .cache
+    mkdir -p .cache
     
     if [ -d .mozilla/firefox ]; then
         for profile in .mozilla/firefox/*.default; do

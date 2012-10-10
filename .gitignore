@@ -2,6 +2,9 @@
 /mnt
 /settings.sh
 /chrooter/build
+/src/fallocator
+/src/growpart
+/src/parent-dev
 
 /.idea
 

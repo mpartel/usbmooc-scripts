@@ -4,16 +4,28 @@ meant for use with [http://mooc.fi/](http://mooc.fi/).
 The image files may be downloaded [here](http://new.testmycode.net/usbmooc/).
 
 
-## Basic usage ##
+## Building the tools ##
+
+    make -C src
+    make -C chrooter
+
+If you're on a 64-bit system, your compiler must be able to generate i386 executables.
+You may need to install `gcc-multilib` on Debian-derivatives.
+
+
+## Usage ##
 
 The image is based on 32-bit Linux Mint 13 and lives in a raw disk file, including the partition table.
-The system is assumed to be installed on a single partition that is marked bootable.
+The system is assumed to be installed on a single ext2/3 partition that is marked bootable.
 
 Edit the image under QEMU with a command like
 
     qemu-system-i386 -hda images/current.img -m 512M -net user -net nic
 
 See [here](http://qemu.weilnetz.de/qemu-doc.html#sec_005finvocation) for more options
+
+Installing and configuring the `swapspace` package is recommended, since the scripts currently don't
+support swap partitions.
 
 
 ## clean-image.sh ##
@@ -24,12 +36,13 @@ Mounts the image and
 - removes `.ssh/known_hosts`
 - clears recently opened documents
 - clears Firefox cache, cookies, history and downloads (but not settings)
+- clears .cache
 - clears `/tmp` and `/var/tmp`
 - clears apt's package cache
 - removes the TMC plugin's settings
 
 Must be run as root since it needs to mount the image.
-Requires ruby, sqlite3 and parted.
+Requires ruby, sqlite3 and parted 3.x.
 
 
 ## zerofree.sh ##
@@ -51,35 +64,39 @@ Compresses `images/current.img` to `images/version-number.img.gz` and sets `imag
 Set RSYNC_DEST to something like `user@server:/path/to/webdir/` in `settings.sh` or on the shell.
 Then call this. It will sync everything under `images/` except for `current.img`.
 
-The full release sequence is:
 
-- clean-image.sh
-- zerofree.sh
-- release.sh
-- test the image in a VM
-- rsync.sh
+## install-root-resizer.sh ##
 
-## resize-onto.sh ##
+Installs an initrd component that resizes the root fs partition and file system on boot.
 
-Usage:
 
-    resize-onto.sh new-image
+## grow-image.sh ##
 
-Copies the data in `images/current.img` to `new-image` such that the main partition is grown or shrunk.
-`new-image` must exist with the desired size. `fallocate -l size new-image` is a good way to allocate it.
+Usage: grow-image.sh --img-only <new_size>
 
-It also needs to reinstall grub. For that, `chrooter/` must be built (with `make`).
-If you're on a 64-bit system, your compiler must be able to generate i386 executables.
-You may need to install `gcc-multilib` on Debian-derivatives.
+Grows the size of the image, and, unless `--img-only` is specified,
+ the partition on it and the file system on the partition.
 
-You may also set `new-image` to a block device (your USB stick), but ensure your desktop environment
-doesn't automount it, since each change to its partition table seems to fire some sort of "disk changed" event.
-
-Caveat: currently, when shrinking the image, it shrinks the main partition's FS temporarily in the original image.
-This may be slightly dangerous.
-
-Requires ruby and parted.
+Requires ruby and parted 3.x.
 Must be run as root since it currently uses a loopback device to resize the FS.
 
 
+## shrink-image.sh ##
 
+Resizes the root FS to be as small as possible.
+It's recommended to run `clean-image.sh` and `zerofree.sh` first.
+
+Requires ruby and parted 3.x.
+Must be run as root since it currently uses a loopback device to resize the FS.
+
+
+## Making a release ##
+
+- clean-image.sh
+- zerofree.sh
+- install-root-resizer.sh
+- shrink-image.sh
+- release.sh
+- grow-image.sh  (to make the image usable in a VM again)
+- test the image in a VM one more time
+- rsync.sh

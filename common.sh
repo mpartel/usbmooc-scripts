@@ -35,8 +35,11 @@ mount_image() {
 }
 
 unmount_image() {
-    echo "Unmounting image."
-    sleep 1
-    [ -d "$MOUNTPOINT" ] && umount "$MOUNTPOINT"
-    losetup -d "$LOOPBACK_FILE"
+    if [ -d "$MOUNTPOINT" ]; then
+        echo "Unmounting image."
+        sleep 1
+        umount "$MOUNTPOINT" || true
+        losetup -d "$LOOPBACK_FILE"
+        rmdir "$MOUNTPOINT"
+    fi
 }

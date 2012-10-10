@@ -32,6 +32,9 @@ if grep -q REINSTALL_GRUB /mnt/proc/cmdline; then
   #chroot /mnt /usr/sbin/update-grub
   echo "Running grub-setup"
   chroot /mnt /usr/sbin/grub-setup /dev/ubda
+elif grep -q UPDATE_INITRAMFS /mnt/proc/cmdline; then
+  echo "Running update-initramfs"
+  chroot /mnt /usr/sbin/update-initramfs -u -v
 else
   chroot /mnt /bin/bash
 fi
