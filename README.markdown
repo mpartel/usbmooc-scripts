@@ -21,8 +21,9 @@ The system is assumed to be installed on a single ext2/3 partition that is marke
 Edit the image under QEMU with a command like
 
     qemu-system-i386 -hda images/current.img -m 512M -net user -net nic
+    # (shorthand `run-qemu.sh`)
 
-See [here](http://qemu.weilnetz.de/qemu-doc.html#sec_005finvocation) for more options
+See [here](http://qemu.weilnetz.de/qemu-doc.html#sec_005finvocation) for more options.
 
 Installing and configuring the `swapspace` package is recommended, since the scripts currently don't
 support swap partitions.
@@ -72,7 +73,7 @@ Installs an initrd component that resizes the root fs partition and file system 
 
 ## grow-image.sh ##
 
-Usage: grow-image.sh --img-only <new_size>
+Usage: grow-image.sh [--img-only] <new_size>
 
 Grows the size of the image, and, unless `--img-only` is specified,
  the partition on it and the file system on the partition.
