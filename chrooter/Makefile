@@ -1,8 +1,8 @@
 
 OUT=build
 
-BUSYBOX_VERSION=1.20.2
-KERNEL_VERSION=3.4.9
+BUSYBOX_VERSION=1.22.1
+KERNEL_VERSION=3.4.77
 
 .NOTPARALLEL:
 
@@ -23,12 +23,12 @@ $(OUT)/linux.uml: $(OUT)/linux-$(KERNEL_VERSION)/.config
 $(OUT)/linux-$(KERNEL_VERSION)/.config: kernel-config $(OUT)/linux-$(KERNEL_VERSION)/Makefile
 	cp $< $@
 
-$(OUT)/linux-$(KERNEL_VERSION)/Makefile: $(OUT)/linux-$(KERNEL_VERSION).tar.bz2
-	tar -C $(OUT) -xvjf $(OUT)/linux-$(KERNEL_VERSION).tar.bz2
+$(OUT)/linux-$(KERNEL_VERSION)/Makefile: $(OUT)/linux-$(KERNEL_VERSION).tar.xz
+	tar -C $(OUT) -xvJf $(OUT)/linux-$(KERNEL_VERSION).tar.xz
 	touch $@
 
-$(OUT)/linux-$(KERNEL_VERSION).tar.bz2:
-	wget -O $@ http://www.kernel.org/pub/linux/kernel/v3.0/linux-$(KERNEL_VERSION).tar.bz2
+$(OUT)/linux-$(KERNEL_VERSION).tar.xz:
+	wget -O $@ http://www.kernel.org/pub/linux/kernel/v3.0/linux-$(KERNEL_VERSION).tar.xz
 
 
 # Busybox
