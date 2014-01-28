@@ -76,7 +76,8 @@ Installs an initrd component that resizes the root fs partition and file system 
 Usage: grow-image.sh [--img-only] <new_size>
 
 Grows the size of the image, and, unless `--img-only` is specified,
- the partition on it and the file system on the partition.
+the partition on it and the file system on the partition.
+The size should be given with a size suffix, e.g. "7G" for seven gigs.
 
 Requires ruby and parted 3.x.
 Must be run as root since it currently uses a loopback device to resize the FS.
@@ -98,6 +99,6 @@ Must be run as root since it currently uses a loopback device to resize the FS.
 - install-root-resizer.sh
 - shrink-image.sh
 - release.sh
-- grow-image.sh  (to make the image usable in a VM again)
+- grow-image.sh 7G  (to make the image usable in a VM again)
 - test the image in a VM one more time
 - rsync.sh
